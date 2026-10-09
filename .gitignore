@@ -15,3 +15,6 @@ build/
 
 # tasks
 .vscode/
+
+# Other
+include/glm/

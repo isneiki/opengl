@@ -1,10 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
+include(FetchContent)
 
 project(LearnOpenGL LANGUAGES C CXX)
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm
+    GIT_TAG        1.0.3
+)
+FetchContent_MakeAvailable(glm)
 
 add_executable(LearnOpenGL
     src/main.cpp
     src/glad.c
+    
+    # Libraries
+    src/libraries/stb_image.cpp
 )
 
 target_compile_features(LearnOpenGL PRIVATE cxx_std_17)
@@ -16,9 +27,15 @@ target_include_directories(LearnOpenGL PRIVATE
 
 target_link_libraries(LearnOpenGL PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw3.lib
+    glm::glm
 )
+
 add_custom_command(TARGET LearnOpenGL POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/src/shaders
         $<TARGET_FILE_DIR:LearnOpenGL>/shaders
+
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/src/textures
+        $<TARGET_FILE_DIR:LearnOpenGL>/textures
 )
